@@ -27,7 +27,6 @@ object MediaLoader {
 
         val projection = arrayOf(
                 MediaStore.MediaColumns._ID,
-                MediaStore.MediaColumns.DATA,
                 MediaStore.MediaColumns.DISPLAY_NAME,
                 MediaStore.Images.Media.DATE_ADDED
         )
@@ -39,9 +38,6 @@ object MediaLoader {
                 mediaList += Media(
                         type = mediaType,
                         uri = Uri.withAppendedPath(uri, it.getInt(MediaStore.MediaColumns._ID).toString()),
-
-
-//                        uri = Uri.parse(it.getString(MediaStore.MediaColumns.DATA)),
                         name = it.getString(MediaStore.MediaColumns.DISPLAY_NAME),
                         addedAt = it.getLong(MediaStore.MediaColumns.DATE_ADDED)
                 )
