@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+
+    <color name="colorLightGrey">#FFD9D9DA</color>
+
+    <color name="colorClockFacePrimary">#FFFFFF</color>
+    <color name="colorClockFaceSecondary">#008577</color>
+    <color name="colorClockHandHours">#004444</color>
+    <color name="colorClockHandMinutes">#002222</color>
+    <color name="colorClockHandSeconds">#C60C30</color>
+
+</resources>
