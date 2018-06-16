@@ -1,4 +1,4 @@
-package ly.slide.promo.testapp.presentation
+package ly.slide.promo.testapp.presentation.widget
 
 import android.app.Dialog
 import android.content.Context

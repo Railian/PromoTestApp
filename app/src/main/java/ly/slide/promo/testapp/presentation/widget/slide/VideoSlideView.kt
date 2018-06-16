@@ -17,6 +17,7 @@ class VideoSlideView(context: Context) : ScalableVideoView(context), Slide {
         setDataSource(context, uri!!)
         prepareAsync {
             setScalableType(ScalableType.CENTER_CROP)
+            isLooping = true
             if (isStarted) it.start()
             onPreparedListener?.invoke()
         }

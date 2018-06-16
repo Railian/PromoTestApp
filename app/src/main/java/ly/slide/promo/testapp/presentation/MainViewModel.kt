@@ -64,8 +64,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         getApplication<Application>()
                 .baseContext
                 .let(MediaLoader::getImagesAndVideos)
+                .map { it.sortedByDescending(Media::addedAt) }
                 .subscribeOn(Schedulers.io())
-                .map { it.sortedBy(Media::addedAt) }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy { mediaList = it }
                 .addTo(compositeDisposable)

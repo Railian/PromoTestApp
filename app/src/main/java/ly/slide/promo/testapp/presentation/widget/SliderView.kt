@@ -2,12 +2,17 @@ package ly.slide.promo.testapp.presentation.widget
 
 import android.animation.Animator
 import android.content.Context
+import android.os.Parcel
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import ly.slide.promo.testapp.domain.entity.Media
 import ly.slide.promo.testapp.presentation.UiConstants
+import ly.slide.promo.testapp.presentation.util.KParcelable
+import ly.slide.promo.testapp.presentation.util.parcelableCreator
+import ly.slide.promo.testapp.presentation.util.readParcelable
 import ly.slide.promo.testapp.presentation.widget.slide.ImageSlideView
 import ly.slide.promo.testapp.presentation.widget.slide.Slide
 import ly.slide.promo.testapp.presentation.widget.slide.VideoSlideView
@@ -94,7 +99,7 @@ class SliderView @JvmOverloads constructor(
         when {
             media == null -> return false
             media.type == Media.Type.IMAGE && this is ImageSlideView -> prepare(media.uri)
-            media.type == Media.Type.VIDEO && this is ImageSlideView -> prepare(media.uri)
+            media.type == Media.Type.VIDEO && this is VideoSlideView -> prepare(media.uri)
             else -> return false
         }
         return true
@@ -106,5 +111,37 @@ class SliderView @JvmOverloads constructor(
 
     private fun addSlide(view: View?, visible: Boolean) {
         view?.apply { alpha = if (visible) 1f else 0f }?.let(::addView)
+    }
+
+    override fun onSaveInstanceState(): Parcelable {
+        return SavedState(animationDuration, superState = super.onSaveInstanceState())
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        val restoredState = state as SavedState
+        animationDuration = restoredState.animationDuration
+        super.onRestoreInstanceState(restoredState.superState)
+    }
+
+    private class SavedState(
+            val animationDuration: Long,
+            val superState: Parcelable
+    ) : KParcelable {
+
+        private constructor(source: Parcel) : this(
+                animationDuration = source.readLong(),
+                superState = source.readParcelable()
+        )
+
+        override fun writeToParcel(dest: Parcel, flags: Int) {
+            dest.writeLong(animationDuration)
+            dest.writeParcelable(superState, flags)
+        }
+
+        companion object {
+            @JvmField
+            @Suppress("unused")
+            val CREATOR = parcelableCreator(::SavedState)
+        }
     }
 }
