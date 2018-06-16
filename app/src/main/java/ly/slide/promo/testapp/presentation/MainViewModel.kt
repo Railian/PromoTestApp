@@ -11,12 +11,30 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
-import ly.slide.promo.testapp.domain.Media
+import ly.slide.promo.testapp.domain.entity.Media
+import ly.slide.promo.testapp.domain.util.vetoable
 import ly.slide.promo.testapp.platform.MediaLoader
 import org.joda.time.LocalTime
 import java.util.concurrent.TimeUnit
+import kotlin.properties.Delegates
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
+
+    var slideshowInterval: Long by Delegates.vetoable(
+            initialValue = UiConstants.SLIDESHOW_INTERVAL_DEFAULT,
+            onChange = { _, oldValue, newValue ->
+                newValue != oldValue && newValue in LongRange(
+                        UiConstants.SLIDESHOW_INTERVAL_MIN,
+                        UiConstants.SLIDESHOW_INTERVAL_MAX
+                )
+            },
+            afterChange = { _, _, _ ->
+                if (slideshowDisposable != null) {
+                    pauseSlideshow()
+                    startSlideshow()
+                }
+            }
+    )
 
     val showSlide: LiveData<Media> get() = _showSlide
     val prepareSlide: LiveData<Media> get() = _prepareSlide
@@ -30,7 +48,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private var currentSlidePosition = -1
 
     private val compositeDisposable = CompositeDisposable()
-    private var slideShowDisposable: Disposable? = null
+    private var slideshowDisposable: Disposable? = null
 
     init {
         Observable.interval(1, TimeUnit.SECONDS)
@@ -53,30 +71,26 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun startSlideshow() {
-        Observable.interval(4, TimeUnit.SECONDS)
+        Observable.interval(slideshowInterval, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext {
-                    mediaList?.let { slides ->
-                        currentSlidePosition = (currentSlidePosition + 1) % slides.count()
-                        _showSlide.value = slides[currentSlidePosition]
-                        val nextSlidePosition = (currentSlidePosition + 1) % slides.count()
-                        _prepareSlide.value = slides[nextSlidePosition]
-                    }
-                }
-                .subscribe()
+                .subscribeBy { showNextSlide() }
                 .addTo(compositeDisposable)
-                .also { slideShowDisposable = it }
+                .also { slideshowDisposable = it }
     }
 
     fun pauseSlideshow() {
-        slideShowDisposable?.dispose()
-        slideShowDisposable = null
+        slideshowDisposable?.dispose()
+        slideshowDisposable = null
     }
 
-    fun stopSlideshow() {
-        pauseSlideshow()
-        currentSlidePosition = -1
+    private fun showNextSlide() {
+        mediaList?.let { slides ->
+            currentSlidePosition = (currentSlidePosition + 1) % slides.count()
+            _showSlide.value = slides[currentSlidePosition]
+            val nextSlidePosition = (currentSlidePosition + 1) % slides.count()
+            _prepareSlide.value = slides[nextSlidePosition]
+        }
     }
 
     override fun onCleared() {

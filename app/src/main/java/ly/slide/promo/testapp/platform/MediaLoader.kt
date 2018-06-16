@@ -7,7 +7,7 @@ import androidx.core.database.getInt
 import androidx.core.database.getLong
 import androidx.core.database.getString
 import io.reactivex.Single
-import ly.slide.promo.testapp.domain.Media
+import ly.slide.promo.testapp.domain.entity.Media
 
 object MediaLoader {
 

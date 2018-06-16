@@ -1,4 +1,4 @@
-package ly.slide.promo.testapp.domain
+package ly.slide.promo.testapp.domain.entity
 
 import android.net.Uri
 

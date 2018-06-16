@@ -6,7 +6,8 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
-import ly.slide.promo.testapp.domain.Media
+import ly.slide.promo.testapp.domain.entity.Media
+import ly.slide.promo.testapp.presentation.UiConstants
 import ly.slide.promo.testapp.presentation.widget.slide.ImageSlideView
 import ly.slide.promo.testapp.presentation.widget.slide.Slide
 import ly.slide.promo.testapp.presentation.widget.slide.VideoSlideView
@@ -20,8 +21,13 @@ class SliderView @JvmOverloads constructor(
 ) : RelativeLayout(context, attrs, defStyleAttr, defStyleRes) {
 
     var animationDuration: Long by Delegates.vetoable(
-            initialValue = 1000L,
-            onChange = { _, _, newValue -> newValue in 300..3000 }
+            initialValue = UiConstants.ANIMATION_DURATION_DEFAULT,
+            onChange = { _, oldValue, newValue ->
+                newValue != oldValue && newValue in LongRange(
+                        UiConstants.ANIMATION_DURATION_MIN,
+                        UiConstants.ANIMATION_DURATION_MAX
+                )
+            }
     )
 
     private var previousSlide: View? = null

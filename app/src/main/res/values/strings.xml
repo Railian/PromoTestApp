@@ -1,4 +1,22 @@
 <resources>
+
     <string name="app_name">PromoTestApp</string>
-    <string name="action_settings">Settings</string>
+
+    <string name="action_slideshow_interval">Slideshow interval</string>
+    <string name="action_animation_duration">Animation duration</string>
+    <string name="apply">apply</string>
+    <string name="cancel">cancel</string>
+
+    <plurals name="slideshow_interval_value">
+        <item quantity="zero">%1$d seconds</item>
+        <item quantity="one">%1$d second</item>
+        <item quantity="other">%1$d seconds</item>
+    </plurals>
+
+    <plurals name="animation_duration_value">
+        <item quantity="zero">%1$d milliseconds</item>
+        <item quantity="one">%1$d millisecond</item>
+        <item quantity="other">%1$d milliseconds</item>
+    </plurals>
+
 </resources>
