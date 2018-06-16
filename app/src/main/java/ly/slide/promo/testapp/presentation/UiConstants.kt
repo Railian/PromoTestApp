@@ -12,4 +12,14 @@ internal object UiConstants {
     const val ANIMATION_DURATION_MIN = 300L
     const val ANIMATION_DURATION_MAX = 3_000L
 
+    // dip
+    const val CLOCK_ELEVATION_DEFAULT = 8f
+    const val CLOCK_ELEVATION_MIN = 0f
+    const val CLOCK_ELEVATION_MAX = 32f
+
+    // percents
+    const val CLOCK_OPACITY_DEFAULT = 100
+    const val CLOCK_OPACITY_MIN = 20
+    const val CLOCK_OPACITY_MAX = 100
+
 }

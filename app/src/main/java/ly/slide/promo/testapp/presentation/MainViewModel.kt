@@ -52,7 +52,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     init {
         Observable.interval(1, TimeUnit.SECONDS)
-                .map(::LocalTime)
+                .startWith(0)
+                .map { LocalTime.now() }
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(_localTime::setValue)
@@ -86,10 +87,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun showNextSlide() {
         mediaList?.let { slides ->
-            currentSlidePosition = (currentSlidePosition + 1) % slides.count()
-            _showSlide.value = slides[currentSlidePosition]
-            val nextSlidePosition = (currentSlidePosition + 1) % slides.count()
-            _prepareSlide.value = slides[nextSlidePosition]
+            if (slides.isNotEmpty()) {
+                currentSlidePosition = (currentSlidePosition + 1) % slides.count()
+                _showSlide.value = slides[currentSlidePosition]
+                val nextSlidePosition = (currentSlidePosition + 1) % slides.count()
+                _prepareSlide.value = slides[nextSlidePosition]
+            }
         }
     }
 

@@ -4,6 +4,11 @@
 
     <string name="action_slideshow_interval">Slideshow interval</string>
     <string name="action_animation_duration">Animation duration</string>
+    <string name="action_clock_settings">Clock settings</string>
+    <string name="action_clock_display">Display</string>
+    <string name="action_clock_elevation">Clock elevation</string>
+    <string name="action_clock_opacity">Clock opacity</string>
+
     <string name="apply">apply</string>
     <string name="cancel">cancel</string>
 
@@ -17,6 +22,14 @@
         <item quantity="zero">%1$d milliseconds</item>
         <item quantity="one">%1$d millisecond</item>
         <item quantity="other">%1$d milliseconds</item>
+    </plurals>
+
+    <plurals name="clock_elevation_value">
+        <item quantity="other">%1$d dip</item>
+    </plurals>
+
+    <plurals name="clock_opacity_value">
+        <item quantity="other">%1$d%%</item>
     </plurals>
 
 </resources>

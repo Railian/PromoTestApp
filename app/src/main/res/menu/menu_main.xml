@@ -4,11 +4,29 @@
 
     <item
         android:id="@+id/action_slideshow_interval"
-        android:orderInCategory="100"
         android:title="@string/action_slideshow_interval" />
 
     <item
         android:id="@+id/action_animation_duration"
-        android:orderInCategory="150"
         android:title="@string/action_animation_duration" />
+
+    <item android:title="@string/action_clock_settings">
+        <menu>
+            <item
+                android:id="@+id/action_clock_display"
+                android:checkable="true"
+                android:checked="true"
+                android:title="@string/action_clock_display" />
+
+            <item
+                android:id="@+id/action_clock_elevation"
+                android:title="@string/action_clock_elevation" />
+
+            <item
+                android:id="@+id/action_clock_opacity"
+                android:title="@string/action_clock_opacity" />
+
+
+        </menu>
+    </item>
 </menu>
