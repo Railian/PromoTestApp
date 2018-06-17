@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.PointF
-import android.os.Parcel
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.util.Size
@@ -24,6 +23,13 @@ class AnalogClockView @JvmOverloads constructor(
         defStyleAttr: Int = 0,
         defStyleRes: Int = 0
 ) : View(context, attrs, defStyleAttr, defStyleRes) {
+
+    companion object {
+        private const val STATE_TIME = "state:time"
+        private const val STATE_ELEVATION = "state:elevation"
+        private const val STATE_ALPHA = "state:alpha"
+        private const val STATE_VISIBILITY = "state:visibility"
+    }
 
     private var viewport: Size by Delegates.notNull()
     private var center: PointF by Delegates.notNull()
@@ -109,47 +115,23 @@ class AnalogClockView @JvmOverloads constructor(
     private val LocalTime.angleOfSecondsHand: Double
         get() = secondOfMinute / 60f * (2 * Math.PI) - Math.PI / 2
 
-    override fun onSaveInstanceState(): Parcelable {
-        return SavedState(time, elevation, alpha, visibility, superState = super.onSaveInstanceState())
+    override fun onSaveInstanceState(): Parcelable? {
+        val superState = super.onSaveInstanceState()
+        return superState.alsoSaveState(
+                STATE_TIME to time,
+                STATE_ELEVATION to elevation,
+                STATE_ALPHA to alpha,
+                STATE_VISIBILITY to visibility
+        )
     }
 
     override fun onRestoreInstanceState(state: Parcelable?) {
-        val restoredState = state as SavedState
-        time = restoredState.time
-        elevation = restoredState.elevation
-        alpha = restoredState.alpha
-        visibility = restoredState.visibility
-        super.onRestoreInstanceState(restoredState.superState)
-    }
-
-    private class SavedState(
-            val time: LocalTime,
-            val elevation: Float,
-            val alpha: Float,
-            val visibility: Int,
-            val superState: Parcelable
-    ) : KParcelable {
-
-        private constructor(source: Parcel) : this(
-                time = source.readLocalTime(),
-                elevation = source.readFloat(),
-                alpha = source.readFloat(),
-                visibility = source.readInt(),
-                superState = source.readParcelable()
-        )
-
-        override fun writeToParcel(dest: Parcel, flags: Int) {
-            dest.writeLocalTime(time)
-            dest.writeFloat(elevation)
-            dest.writeFloat(alpha)
-            dest.writeInt(visibility)
-            dest.writeParcelable(superState, flags)
+        val superState = state.restoreSavedState {
+            time = get(STATE_TIME) as LocalTime
+            elevation = getFloat(STATE_ELEVATION)
+            alpha = getFloat(STATE_ALPHA)
+            visibility = getInt(STATE_VISIBILITY)
         }
-
-        companion object {
-            @JvmField
-            @Suppress("unused")
-            val CREATOR = parcelableCreator(::SavedState)
-        }
+        super.onRestoreInstanceState(superState)
     }
 }
